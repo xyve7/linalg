@@ -1,0 +1,7 @@
+-xc
+-std=gnu2x
+-Wall
+-Wextra
+-Wno-unused-value
+-lreadline
+-I./
