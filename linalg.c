@@ -205,7 +205,30 @@ Mat mat_cofactor(Mat *self) {
     }
     return mat;
 }
+Mat mat_cramer(Mat *coefficients, Mat *constants) {
+	if (coefficients->row != coefficients->col) {
+		die("mat_cramer: mat must be square");
+	}
+	if (coefficients->col != constants->row) {
+		die("mat_cramer: constants are not equal to coefficients");
+	}
 
+	double coefficient_det = mat_det(coefficients); 
+	Mat result = mat_new(constants->row, 1);
+	for (size_t i = 0; i < constants->row; i++) {
+		Mat A = mat_dup(coefficients);
+
+		for (size_t j = 0; j < constants->row; j++) {
+			A.data[j][i] = constants->data[j][0];
+		}
+
+		double A_det = mat_det(&A);
+		result.data[i][0] = A_det / coefficient_det;
+
+		mat_free(&A);
+	}
+	return result;
+}
 double mat_det(Mat *self) {
     if (self->col != self->row) {
         die("mat_det: mat must be square");

@@ -30,6 +30,7 @@ Mat mat_minor(Mat *self, size_t row, size_t col);
 
 double mat_cofactor_at(Mat *self, size_t row, size_t col);
 Mat mat_cofactor(Mat *self);
+Mat mat_cramer(Mat *coefficients, Mat *constants);
 
 double mat_det(Mat *self);
 Mat mat_inverse(Mat *self);
