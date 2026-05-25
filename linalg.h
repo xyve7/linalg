@@ -26,6 +26,7 @@ Mat mat_mul(Mat *A, Mat *B);
 Mat mat_scale(Mat *A, double scalar);
 
 Mat mat_trans(Mat *self);
+Mat mat_diag(Mat *self);
 Mat mat_minor(Mat *self, size_t row, size_t col);
 
 double mat_cofactor_at(Mat *self, size_t row, size_t col);

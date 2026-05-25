@@ -79,7 +79,7 @@ Mat mat_dup(Mat *self) {
 
 double mat_at(Mat *self, size_t row, size_t col) {
     if (row < 1 || col < 1) {
-        die("mat_at: mat is indexed from 1, not 0");
+        die("mat_at: matrix is indexed from 1, not 0");
     }
     if (row > self->row || col > self->col) {
         die("mat_at: index out of bounds");
@@ -88,7 +88,7 @@ double mat_at(Mat *self, size_t row, size_t col) {
 }
 Mat mat_row(Mat *self, size_t row) {
     if (row < 1) {
-        die("mat_row: mat is indexed from 1, not 0");
+        die("mat_row: matrix is indexed from 1, not 0");
     }
     Mat mat = mat_new(1, self->col);
     memcpy(mat.data[0], self->data[row - 1], self->col * sizeof(double));
@@ -96,7 +96,7 @@ Mat mat_row(Mat *self, size_t row) {
 }
 Mat mat_col(Mat *self, size_t col) {
     if (col < 1) {
-        die("mat_row: mat is indexed from 1, not 0");
+        die("mat_row: matrix is indexed from 1, not 0");
     }
     Mat mat = mat_new(self->row, 1);
     for (size_t i = 0; i < mat.row; i++) {
@@ -107,7 +107,7 @@ Mat mat_col(Mat *self, size_t col) {
 
 Mat mat_add(Mat *A, Mat *B) {
     if (A->row != B->row || A->col != B->col) {
-        die("mat_add: mat A and B must be the same size");
+        die("mat_add: matrix A and B must be the same size");
     }
     Mat mat = mat_new(A->row, A->col);
     for (size_t i = 0; i < A->row; i++) {
@@ -119,7 +119,7 @@ Mat mat_add(Mat *A, Mat *B) {
 }
 Mat mat_sub(Mat *A, Mat *B) {
     if (A->row != B->row || A->col != B->col) {
-        die("mat_add: mat A and B must be the same size");
+        die("mat_add: matrix A and B must be the same size");
     }
     Mat mat = mat_new(A->row, A->col);
     for (size_t i = 0; i < A->row; i++) {
@@ -131,7 +131,7 @@ Mat mat_sub(Mat *A, Mat *B) {
 }
 Mat mat_mul(Mat *A, Mat *B) {
     if (A->col != B->row) {
-        die("mat_mul: mat A and B must be complimentary");
+        die("mat_mul: matrix A and B must be complimentary");
     }
     size_t l = A->col;
     Mat mat = mat_new(A->row, B->col);
@@ -161,6 +161,16 @@ Mat mat_trans(Mat *self) {
         for (size_t j = 0; j < self->col; j++) {
             mat.data[j][i] = self->data[i][j];
         }
+    }
+    return mat;
+}
+Mat mat_diag(Mat *self) {
+	if (self->row != self->col) {
+		die("mat_diag: matrix must be square");
+	}
+    Mat mat = mat_new(self->col, self->row);
+    for (size_t i = 0; i < self->row; i++) {
+		mat.data[i][i] = self->data[i][i];
     }
     return mat;
 }
@@ -207,7 +217,7 @@ Mat mat_cofactor(Mat *self) {
 }
 Mat mat_cramer(Mat *coefficients, Mat *constants) {
 	if (coefficients->row != coefficients->col) {
-		die("mat_cramer: mat must be square");
+		die("mat_cramer: matrix must be square");
 	}
 	if (coefficients->col != constants->row) {
 		die("mat_cramer: constants are not equal to coefficients");
@@ -231,7 +241,7 @@ Mat mat_cramer(Mat *coefficients, Mat *constants) {
 }
 double mat_det(Mat *self) {
     if (self->col != self->row) {
-        die("mat_det: mat must be square");
+        die("mat_det: matrix must be square");
     }
     if (self->col == 2 && self->row == 2) {
         double a = mat_at(self, 1, 1);
@@ -252,7 +262,7 @@ double mat_det(Mat *self) {
 Mat mat_inverse(Mat *self) {
     double det = mat_det(self);
     if (det == 0.0) {
-        die("mat_inverse: mat not invertable");
+        die("mat_inverse: matrix not invertable");
     }
     Mat C = mat_cofactor(self);
     Mat Ct = mat_trans(&C);
